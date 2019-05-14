@@ -3,13 +3,12 @@ package com.travel.service;
 import com.travel.constants.Constants;
 import com.travel.entity.Flight;
 import com.travel.entity.Tour;
-import com.travel.util.DataInitializer;
 
 import java.util.StringTokenizer;
 
 public class PathFinder {
 
-    public boolean isAvailableInDatabase(String destination){
+    public boolean isAvailableInPathDatabase(String destination){
         StringTokenizer stz;
         for (String path: Constants.Paths.PATHS_ARRAY) {
             stz = new StringTokenizer(path,",");
@@ -22,29 +21,19 @@ public class PathFinder {
         return false;
     }
 
-    public String checkForFlightsBetweenCities(String fromDestination, String toDestination){
-        Boolean isFromDestinationPresent = isAvailableInDatabase(fromDestination);
-        Boolean isToDestinationPresent = isAvailableInDatabase(toDestination);
+    public String checkForFlightsBetweenCities(String fromDestination, String toDestination, Tour tour){
+        Boolean isFromDestinationPresent = isAvailableInPathDatabase(fromDestination);
+        Boolean isToDestinationPresent = isAvailableInPathDatabase(toDestination);
         if(isFromDestinationPresent && isToDestinationPresent){
-            return String.valueOf(isDirectFlight(fromDestination,toDestination));
+            return String.valueOf(isDirectFlight(fromDestination,toDestination, tour));
         }
         else {
-            if(!isFromDestinationPresent){
-                return "No city named \""+fromDestination+"\" in database";
-            }
-            else{
-                return "No city named \""+toDestination+"\" in database";
-            }
+            return AppResponseService.getResponseIfDestinationNotPresent(fromDestination, toDestination, isFromDestinationPresent);
         }
     }
-    public boolean isDirectFlight(String fromDestination, String toDestination){
-        Tour tour = DataInitializer.intializeTours();
-        for (Flight flight: tour.getAvailableFlights()) {
-            if(isFlightAvailable(fromDestination, toDestination, flight)){
-                return true;
-            }
-        }
-        return false;
+
+    public boolean isDirectFlight(String fromDestination, String toDestination, Tour tour){
+        return tour.getAvailableFlights().stream().anyMatch((flight) -> isFlightAvailable(fromDestination, toDestination, flight));
     }
 
     private boolean isFlightAvailable(String fromDestination, String toDestination, Flight flight) {

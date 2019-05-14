@@ -1,6 +1,8 @@
 package com.travel;
 
+import com.travel.entity.Tour;
 import com.travel.service.PathFinder;
+import com.travel.util.DataInitializer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +19,8 @@ public class TravelApplication {
             String fromDestination = stz.nextToken();
             String toDestination = stz.nextToken();
             PathFinder pathFinder = new PathFinder();
-            System.out.println(pathFinder.isDirectFlight(fromDestination,toDestination));
+            Tour tour = DataInitializer.intializeTours();
+            System.out.println(pathFinder.isDirectFlight(fromDestination, toDestination, tour));
         }
 
     }
