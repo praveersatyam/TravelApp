@@ -23,18 +23,19 @@ public class PathFinder {
         return false;
     }
 
-    public boolean hasIndirectFlight(List<Integer>[] listImplementedGraph, String fromDestination, String toDestination, Tour tour) {
+    public boolean hasIndirectFlight(String fromDestination, String toDestination, Tour tour) {
+        List<Integer>[] listImplementedGraph = DataInitializer.initializeGraph(tour);
         Integer fromDestinationId = DataInitializer.cityNameToCityIdMap.get(fromDestination);
         Integer toDestinationId = DataInitializer.cityNameToCityIdMap.get(toDestination);
         boolean[] isVisited = new boolean[DataInitializer.cityNameToCityIdMap.size() + 1];
         return searchForIndirectFlight(listImplementedGraph, fromDestinationId, toDestinationId, isVisited);
     }
 
-    public String checkForFlightsBetweenCities(List<Integer>[] listImplementedGraph, String fromDestination, String toDestination, Tour tour) {
+    public String checkForFlightsBetweenCities(String fromDestination, String toDestination, Tour tour) {
         Boolean isFromDestinationPresent = isAvailableInPathDatabase(fromDestination);
         Boolean isToDestinationPresent = isAvailableInPathDatabase(toDestination);
         if (isFromDestinationPresent && isToDestinationPresent) {
-            return String.valueOf(hasDirectFlight(fromDestination, toDestination, tour)|| hasIndirectFlight(listImplementedGraph, fromDestination, toDestination, tour));
+            return String.valueOf(hasDirectFlight(fromDestination, toDestination, tour)|| hasIndirectFlight(fromDestination, toDestination, tour));
         } else {
             return AppResponseService.getResponseIfDestinationNotPresent(fromDestination, toDestination, isFromDestinationPresent);
         }

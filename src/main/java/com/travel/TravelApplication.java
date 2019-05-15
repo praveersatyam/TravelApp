@@ -22,7 +22,7 @@ public class TravelApplication {
             PathFinder pathFinder = new PathFinder();
             Tour tour = DataInitializer.intializeTours();
             List<Integer>[] listImplementedGraph = DataInitializer.initializeGraph(tour);
-            System.out.println(pathFinder.checkForFlightsBetweenCities(listImplementedGraph, fromDestination, toDestination, tour));
+            System.out.println(pathFinder.checkForFlightsBetweenCities(fromDestination, toDestination, tour));
         }
 
     }
