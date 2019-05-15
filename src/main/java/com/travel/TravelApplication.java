@@ -7,6 +7,7 @@ import com.travel.util.DataInitializer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class TravelApplication {
@@ -20,7 +21,8 @@ public class TravelApplication {
             String toDestination = stz.nextToken();
             PathFinder pathFinder = new PathFinder();
             Tour tour = DataInitializer.intializeTours();
-            System.out.println(pathFinder.isDirectFlight(fromDestination, toDestination, tour));
+            List<Integer>[] listImplementedGraph = DataInitializer.initializeGraph(tour);
+            System.out.println(pathFinder.checkForFlightsBetweenCities(listImplementedGraph, fromDestination, toDestination, tour));
         }
 
     }
