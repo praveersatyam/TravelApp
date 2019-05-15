@@ -21,7 +21,6 @@ public class TravelApplication {
             String toDestination = stz.nextToken();
             PathFinder pathFinder = new PathFinder();
             Tour tour = DataInitializer.intializeTours();
-            List<Integer>[] listImplementedGraph = DataInitializer.initializeGraph(tour);
             System.out.println(pathFinder.checkForFlightsBetweenCities(fromDestination, toDestination, tour));
         }
 

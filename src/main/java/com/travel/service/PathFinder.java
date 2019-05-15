@@ -24,11 +24,10 @@ public class PathFinder {
     }
 
     public boolean hasIndirectFlight(String fromDestination, String toDestination, Tour tour) {
-        List<Integer>[] listImplementedGraph = DataInitializer.initializeGraph(tour);
-        Integer fromDestinationId = DataInitializer.cityNameToCityIdMap.get(fromDestination);
-        Integer toDestinationId = DataInitializer.cityNameToCityIdMap.get(toDestination);
-        boolean[] isVisited = new boolean[DataInitializer.cityNameToCityIdMap.size() + 1];
-        return searchForIndirectFlight(listImplementedGraph, fromDestinationId, toDestinationId, isVisited);
+        Integer fromDestinationId = tour.getDestinationToIdMap().get(fromDestination);
+        Integer toDestinationId = tour.getDestinationToIdMap().get(toDestination);
+        boolean[] isVisited = new boolean[tour.getDestinationToIdMap().size() + 1];
+        return searchForIndirectFlight(tour.getGraphOfFlights(), fromDestinationId, toDestinationId, isVisited);
     }
 
     public String checkForFlightsBetweenCities(String fromDestination, String toDestination, Tour tour) {

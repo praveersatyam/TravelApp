@@ -7,7 +7,6 @@ import com.travel.entity.Tour;
 import java.util.*;
 
 public class DataInitializer {
-    public static Map<String, Integer> cityNameToCityIdMap = new TreeMap<>();
     public static List<Flight> intializeFlights(){
         List<Flight> flightList = new ArrayList<>();
         StringTokenizer stz ;
@@ -24,24 +23,25 @@ public class DataInitializer {
     public static Tour intializeTours(){
         Tour tour = new Tour();
         tour.setAvailableFlights(DataInitializer.intializeFlights());
+        tour.setDestinationToIdMap(initializeCityNameToCityIdMap(tour));
+        tour.setGraphOfFlights(DataInitializer.initializeGraph(tour));
         return tour;
     }
 
     public static List<Integer>[] initializeGraph(Tour tour){
         initializeCityNameToCityIdMap(tour);
-        List<Integer>[] listImplementedGraph = new List[DataInitializer.cityNameToCityIdMap.size()+1];
+        List<Integer>[] listImplementedGraph = new List[tour.getDestinationToIdMap().size()+1];
         intializeListArray(listImplementedGraph);
         for (Flight flight: tour.getAvailableFlights()) {
-            Integer fromCityId = cityNameToCityIdMap.get(flight.getFromDestination());
-            Integer toCityId = cityNameToCityIdMap.get(flight.getToDestination());
+            Integer fromCityId = tour.getDestinationToIdMap().get(flight.getFromDestination());
+            Integer toCityId = tour.getDestinationToIdMap().get(flight.getToDestination());
             listImplementedGraph[fromCityId].add(toCityId);
         }
         return listImplementedGraph;
     }
 
     private static Map<String, Integer> initializeCityNameToCityIdMap(Tour tour){
-        cityNameToCityIdMap = new TreeMap<>();
-        int citySequence=0;
+        Map<String, Integer> cityNameToCityIdMap = new TreeMap<>();        int citySequence=0;
         for (Flight flight: tour.getAvailableFlights()) {
             if(!cityNameToCityIdMap.containsKey(flight.getFromDestination())){
                 cityNameToCityIdMap.put(flight.getFromDestination(),++citySequence);
