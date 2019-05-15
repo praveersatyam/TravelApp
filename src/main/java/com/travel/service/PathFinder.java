@@ -3,7 +3,6 @@ package com.travel.service;
 import com.travel.constants.Constants;
 import com.travel.entity.Flight;
 import com.travel.entity.Tour;
-import com.travel.util.DataInitializer;
 
 import java.util.List;
 import java.util.StringTokenizer;
