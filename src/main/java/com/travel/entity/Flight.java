@@ -1,22 +1,23 @@
 package com.travel.entity;
 
 public class Flight {
-    private String fromDestination;
-    private String toDestination;
+    private City fromDestination;
+    private City toDestination;
 
-    public String getFromDestination() {
+    public City getFromDestination() {
         return fromDestination;
     }
 
-    public void setFromDestination(String fromDestination) {
+    public void setFromDestination(City fromDestination) {
         this.fromDestination = fromDestination;
     }
 
-    public String getToDestination() {
+    public City getToDestination() {
         return toDestination;
     }
 
-    public void setToDestination(String toDestination) {
+    public void setToDestination(City toDestination) {
         this.toDestination = toDestination;
     }
+
 }

@@ -1,14 +1,12 @@
 package com.travel.entity;
 
 import java.util.List;
-import java.util.Map;
 
 public class Tour {
     private String tourId;
     private List<Flight> availableFlights;
     private List<Integer>[] graphOfFlights;
-    private Map<String, Integer> destinationToIdMap;
-
+    private List<City> cityList;
 
     public String getTourId() {
         return tourId;
@@ -34,11 +32,11 @@ public class Tour {
         this.graphOfFlights = graphOfFlights;
     }
 
-    public Map<String, Integer> getDestinationToIdMap() {
-        return destinationToIdMap;
+    public List<City> getCityList() {
+        return cityList;
     }
 
-    public void setDestinationToIdMap(Map<String, Integer> destinationToIdMap) {
-        this.destinationToIdMap = destinationToIdMap;
+    public void setCityList(List<City> cityList) {
+        this.cityList = cityList;
     }
 }

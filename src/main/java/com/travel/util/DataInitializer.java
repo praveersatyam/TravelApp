@@ -1,57 +1,94 @@
 package com.travel.util;
 
 import com.travel.constants.Constants;
+import com.travel.entity.City;
 import com.travel.entity.Flight;
 import com.travel.entity.Tour;
 
 import java.util.*;
 
 public class DataInitializer {
-    public static List<Flight> intializeFlights(){
+    public static List<Flight> intializeFlights(Tour tour) {
         List<Flight> flightList = new ArrayList<>();
-        StringTokenizer stz ;
+        StringTokenizer stz;
         for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
-            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i],",");
+            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
+            City fromDestination = getCityByCityName(stz.nextToken(), tour);
+            City toDestination = getCityByCityName(stz.nextToken(), tour);
             Flight flight = new Flight();
-            flight.setFromDestination(stz.nextToken());
-            flight.setToDestination(stz.nextToken());
+            flight.setFromDestination(fromDestination);
+            flight.setToDestination(toDestination);
             flightList.add(flight);
         }
         return flightList;
     }
 
-    public static Tour intializeTours(){
+    public static City getCityByCityName(String destinationName, Tour tour) {
+        for (City city : tour.getCityList()) {
+            if (city.getCityName().equals(destinationName))
+                return city;
+        }
+        return null;
+    }
+
+    public static Tour intializeTours() {
         Tour tour = new Tour();
-        tour.setAvailableFlights(DataInitializer.intializeFlights());
-        tour.setDestinationToIdMap(initializeCityNameToCityIdMap(tour));
-        tour.setGraphOfFlights(DataInitializer.initializeGraph(tour));
+        tour.setCityList(intializeCityList());
+        tour.setAvailableFlights(intializeFlights(tour));
+        tour.setGraphOfFlights(initializeGraph(tour));
         return tour;
     }
 
-    public static List<Integer>[] initializeGraph(Tour tour){
-        initializeCityNameToCityIdMap(tour);
-        List<Integer>[] listImplementedGraph = new List[tour.getDestinationToIdMap().size()+1];
+    public static Map<String, Integer> getCityNameToIdMap() {
+        Map<String, Integer> cityNameToIdMap = new TreeMap<>();
+        Integer cityIdSequence = 0;
+        StringTokenizer stz;
+        for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
+            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
+            String fromDestination = stz.nextToken();
+            String toDestination = stz.nextToken();
+            if (!cityNameToIdMap.containsKey(fromDestination)) {
+                cityNameToIdMap.put(fromDestination, ++cityIdSequence);
+            }
+            if (cityNameToIdMap.containsKey(toDestination)) {
+                cityNameToIdMap.put(toDestination, ++cityIdSequence);
+            }
+        }
+        return cityNameToIdMap;
+    }
+
+    public static List<Integer>[] initializeGraph(Tour tour) {
+        List<Integer>[] listImplementedGraph = new List[tour.getCityList().size() + 1];
         intializeListArray(listImplementedGraph);
-        for (Flight flight: tour.getAvailableFlights()) {
-            Integer fromCityId = tour.getDestinationToIdMap().get(flight.getFromDestination());
-            Integer toCityId = tour.getDestinationToIdMap().get(flight.getToDestination());
-            listImplementedGraph[fromCityId].add(toCityId);
+        for (Flight flight : tour.getAvailableFlights()) {
+            listImplementedGraph[flight.getFromDestination().getId()].add(flight.getToDestination().getId());
         }
         return listImplementedGraph;
     }
 
-    private static Map<String, Integer> initializeCityNameToCityIdMap(Tour tour){
-        Map<String, Integer> cityNameToCityIdMap = new TreeMap<>();        int citySequence=0;
-        for (Flight flight: tour.getAvailableFlights()) {
-            if(!cityNameToCityIdMap.containsKey(flight.getFromDestination())){
-                cityNameToCityIdMap.put(flight.getFromDestination(),++citySequence);
+    public static List<City> intializeCityList() {
+        Set<String> cityNameSet = new HashSet<>();
+        Integer cityIdSequence = 0;
+        List<City> cityList = new ArrayList<>();
+        StringTokenizer stz;
+        for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
+            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
+            City fromDestination = new City();
+            City toDestination = new City();
+            fromDestination.setCityName(stz.nextToken());
+            toDestination.setCityName(stz.nextToken());
+            if (!cityNameSet.contains(fromDestination.getCityName())) {
+                fromDestination.setId(++cityIdSequence);
+                cityList.add(fromDestination);
             }
-            if(!cityNameToCityIdMap.containsKey(flight.getToDestination())){
-                cityNameToCityIdMap.put(flight.getToDestination(),++citySequence);
+            if (!cityNameSet.contains(toDestination.getCityName())) {
+                toDestination.setId(++cityIdSequence);
+                cityList.add(toDestination);
             }
         }
-        return cityNameToCityIdMap;
+        return cityList;
     }
+
 
     private static void intializeListArray(List<Integer>[] listImplementedGraph) {
         for (int i = 0; i < listImplementedGraph.length; i++) {

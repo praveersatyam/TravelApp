@@ -44,7 +44,7 @@ public class TravelTest {
     public void testForIndirectFlightsCrossingTwoCities(){
         PathFinder pathFinder = new PathFinder();
         Tour tour = DataInitializer.intializeTours();
-        String isFlightAvailableResponse = String.valueOf(pathFinder.hasIndirectFlight("Bangalore","Seoul",tour));
+        String isFlightAvailableResponse = String.valueOf(pathFinder.checkForFlightsBetweenCities("Bangalore","Seoul",tour));
         assertEquals("true",isFlightAvailableResponse);
     }
 
@@ -52,7 +52,7 @@ public class TravelTest {
     public void testForIndirectFlightsCrossingThreeCities(){
         PathFinder pathFinder = new PathFinder();
         Tour tour = DataInitializer.intializeTours();
-        String isFlightAvailableResponse = String.valueOf(pathFinder.hasIndirectFlight("Bangalore","Beijing",tour));
+        String isFlightAvailableResponse = String.valueOf(pathFinder.checkForFlightsBetweenCities("Bangalore","Beijing",tour));
         assertEquals("true",isFlightAvailableResponse);
     }
 
@@ -60,7 +60,7 @@ public class TravelTest {
     public void testForUnavailableIndirectFlights(){
         PathFinder pathFinder = new PathFinder();
         Tour tour = DataInitializer.intializeTours();
-        String isFlightAvailableResponse = String.valueOf(pathFinder.hasIndirectFlight("Seoul","Singapore",tour));
+        String isFlightAvailableResponse = String.valueOf(pathFinder.checkForFlightsBetweenCities("Seoul","Singapore",tour));
         assertEquals("false",isFlightAvailableResponse);
     }
 
