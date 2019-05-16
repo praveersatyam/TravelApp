@@ -51,11 +51,15 @@ public class PathFinder {
         if (rootNode == destinationNode) {
             return true;
         } else {
-            isVisited[rootNode] = true;
-            for (Integer cityId : graphOfConnectedCities[rootNode]) {
-                if (!isVisited[cityId]) {
-                    return checkIndirectFlight(graphOfConnectedCities, cityId, destinationNode, isVisited);
-                }
+            return checkForNotVisitedConnectedCities(graphOfConnectedCities, rootNode, destinationNode, isVisited);
+        }
+    }
+
+    private Boolean checkForNotVisitedConnectedCities(List<Integer>[] graphOfConnectedCities, Integer rootNode, Integer destinationNode, boolean[] isVisited) {
+        isVisited[rootNode] = true;
+        for (Integer cityId : graphOfConnectedCities[rootNode]) {
+            if (!isVisited[cityId]) {
+                return checkIndirectFlight(graphOfConnectedCities, cityId, destinationNode, isVisited);
             }
         }
         return false;
