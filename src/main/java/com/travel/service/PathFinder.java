@@ -4,8 +4,9 @@ import com.travel.constants.Constants;
 import com.travel.entity.City;
 import com.travel.entity.Flight;
 import com.travel.entity.Tour;
-import com.travel.util.DataInitializer;
+import com.travel.util.ConvertUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PathFinder {
@@ -17,21 +18,25 @@ public class PathFinder {
         return false;
     }
 
-    public boolean hasIndirectFlight(City fromDestination, City toDestination, Tour tour) {
+    public String findIndirectFlightPath(City fromDestination, City toDestination, Tour tour) {
         Integer fromDestinationId = fromDestination.getId();
         Integer toDestinationId = toDestination.getId();
         boolean[] isVisited = new boolean[tour.getCityList().size() + 1];
-        return checkIndirectFlight(tour.getGraphOfFlights(), fromDestinationId, toDestinationId, isVisited);
+        List<Integer> cityIdPathList =  findIndirectFlightPath(new ArrayList<>(),tour.getGraphOfFlights(), fromDestinationId, toDestinationId, isVisited);
+        if(null != cityIdPathList && cityIdPathList.size()>0){
+            return ConvertUtil.getPathFromCityIdList(cityIdPathList,tour);
+        }
+        return "false";
     }
 
-    public String checkForFlightsBetweenCities(String fromDestination, String toDestination, Tour tour) {
+    public String findFlightPathsBetweenCities(String fromDestination, String toDestination, Tour tour) {
         Boolean isFromDestinationPresent = isAvailableInPathDatabase(fromDestination);
         Boolean isToDestinationPresent = isAvailableInPathDatabase(toDestination);
         if (isFromDestinationPresent && isToDestinationPresent) {
 //            TODO: fix me
-            City fromCity = DataInitializer.getCityByCityName(fromDestination, tour);
-            City toCity = DataInitializer.getCityByCityName(toDestination, tour);
-            return String.valueOf(hasIndirectFlight(fromCity, toCity, tour));
+            City fromCity = ConvertUtil.getCityByCityName(fromDestination, tour);
+            City toCity = ConvertUtil.getCityByCityName(toDestination, tour);
+            return String.valueOf(findIndirectFlightPath(fromCity, toCity, tour));
         } else {
             return AppResponseService.getResponseIfDestinationNotPresent(fromDestination, toDestination, isFromDestinationPresent);
         }
@@ -45,23 +50,25 @@ public class PathFinder {
         return flight.getFromDestination().equals(fromDestination) && flight.getToDestination().equals(toDestination);
     }
 
-    //    TODO: change name -- checkIndirectFlight, graphOfConnectedCities
+    //    TODO: change name -- findIndirectFlightPath, graphOfConnectedCities
 //    can it be simplified
-    private boolean checkIndirectFlight(List<Integer>[] graphOfConnectedCities, Integer rootNode, Integer destinationNode, boolean[] isVisited) {
+    private List<Integer> findIndirectFlightPath(List<Integer> cityInThePathList, List<Integer>[] graphOfConnectedCities, Integer rootNode, Integer destinationNode, boolean[] isVisited) {
         if (rootNode == destinationNode) {
-            return true;
+            cityInThePathList.add(rootNode);
+            return cityInThePathList;
         } else {
-            return checkForNotVisitedConnectedCities(graphOfConnectedCities, rootNode, destinationNode, isVisited);
+            return addPathForNotVisitedConnectedCities(cityInThePathList, graphOfConnectedCities, rootNode, destinationNode, isVisited);
         }
     }
 
-    private Boolean checkForNotVisitedConnectedCities(List<Integer>[] graphOfConnectedCities, Integer rootNode, Integer destinationNode, boolean[] isVisited) {
+    private List<Integer> addPathForNotVisitedConnectedCities(List<Integer> cityInThePathList, List<Integer>[] graphOfConnectedCities, Integer rootNode, Integer destinationNode, boolean[] isVisited) {
         isVisited[rootNode] = true;
+        cityInThePathList.add(rootNode);
         for (Integer cityId : graphOfConnectedCities[rootNode]) {
             if (!isVisited[cityId]) {
-                return checkIndirectFlight(graphOfConnectedCities, cityId, destinationNode, isVisited);
+                return findIndirectFlightPath(cityInThePathList, graphOfConnectedCities, cityId, destinationNode, isVisited);
             }
         }
-        return false;
+        return null;
     }
 }

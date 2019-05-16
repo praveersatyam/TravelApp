@@ -13,22 +13,14 @@ public class DataInitializer {
         StringTokenizer stz;
         for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
             stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
-            City fromDestination = getCityByCityName(stz.nextToken(), tour);
-            City toDestination = getCityByCityName(stz.nextToken(), tour);
+            City fromDestination = ConvertUtil.getCityByCityName(stz.nextToken(), tour);
+            City toDestination = ConvertUtil.getCityByCityName(stz.nextToken(), tour);
             Flight flight = new Flight();
             flight.setFromDestination(fromDestination);
             flight.setToDestination(toDestination);
             flightList.add(flight);
         }
         return flightList;
-    }
-
-    public static City getCityByCityName(String destinationName, Tour tour) {
-        for (City city : tour.getCityList()) {
-            if (city.getCityName().equals(destinationName))
-                return city;
-        }
-        return null;
     }
 
     public static Tour initializeTours() {
@@ -62,6 +54,7 @@ public class DataInitializer {
         initializeListArray(listImplementedGraph);
         for (Flight flight : tour.getAvailableFlights()) {
             listImplementedGraph[flight.getFromDestination().getId()].add(flight.getToDestination().getId());
+            listImplementedGraph[flight.getToDestination().getId()].add(flight.getFromDestination().getId());
         }
         return listImplementedGraph;
     }
