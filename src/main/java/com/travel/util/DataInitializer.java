@@ -8,7 +8,7 @@ import com.travel.entity.Tour;
 import java.util.*;
 
 public class DataInitializer {
-    public static List<Flight> intializeFlights(Tour tour) {
+    public static List<Flight> initializeFlights(Tour tour) {
         List<Flight> flightList = new ArrayList<>();
         StringTokenizer stz;
         for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
@@ -31,10 +31,10 @@ public class DataInitializer {
         return null;
     }
 
-    public static Tour intializeTours() {
+    public static Tour initializeTours() {
         Tour tour = new Tour();
-        tour.setCityList(intializeCityList());
-        tour.setAvailableFlights(intializeFlights(tour));
+        tour.setCityList(initializeCityList());
+        tour.setAvailableFlights(initializeFlights(tour));
         tour.setGraphOfFlights(initializeGraph(tour));
         return tour;
     }
@@ -59,14 +59,14 @@ public class DataInitializer {
 
     public static List<Integer>[] initializeGraph(Tour tour) {
         List<Integer>[] listImplementedGraph = new List[tour.getCityList().size() + 1];
-        intializeListArray(listImplementedGraph);
+        initializeListArray(listImplementedGraph);
         for (Flight flight : tour.getAvailableFlights()) {
             listImplementedGraph[flight.getFromDestination().getId()].add(flight.getToDestination().getId());
         }
         return listImplementedGraph;
     }
 
-    public static List<City> intializeCityList() {
+    public static List<City> initializeCityList() {
         Set<String> cityNameSet = new HashSet<>();
         Integer cityIdSequence = 0;
         List<City> cityList = new ArrayList<>();
@@ -89,8 +89,8 @@ public class DataInitializer {
         return cityList;
     }
 
-
-    private static void intializeListArray(List<Integer>[] listImplementedGraph) {
+    //initialize
+    private static void initializeListArray(List<Integer>[] listImplementedGraph) {
         for (int i = 0; i < listImplementedGraph.length; i++) {
             listImplementedGraph[i] = new ArrayList<>();
         }
