@@ -22,7 +22,7 @@ public class ConvertUtil {
 
     public static City getCityByCityName(String destinationName, Tour tour) {
         for (City city : tour.getCityList()) {
-            if (city.getCityName().equals(destinationName))
+            if (city.getName().equals(destinationName))
                 return city;
         }
         return null;
@@ -31,7 +31,7 @@ public class ConvertUtil {
     public static String getCityNameByCityId(Integer destinationId, Tour tour) {
         for (City city : tour.getCityList()) {
             if (city.getId().equals(destinationId))
-                return city.getCityName();
+                return city.getName();
         }
         return null;
     }

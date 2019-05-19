@@ -5,14 +5,16 @@ import com.travel.entity.City;
 import com.travel.entity.Flight;
 import com.travel.entity.Tour;
 
+import java.io.IOException;
 import java.util.*;
 
 public class DataInitializer {
-    public static List<Flight> initializeFlights(Tour tour) {
+    public static List<Flight> initializeFlights(Tour tour, String path) throws IOException{
         List<Flight> flightList = new ArrayList<>();
+        List<String> pathList = DataParser.readFile(path);
         StringTokenizer stz;
-        for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
-            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
+        for (int i = 0; i < pathList.size(); i++) {
+            stz = new StringTokenizer(pathList.get(i), ",");
             City fromDestination = ConvertUtil.getCityByCityName(stz.nextToken(), tour);
             City toDestination = ConvertUtil.getCityByCityName(stz.nextToken(), tour);
             Flight flight = new Flight();
@@ -23,10 +25,10 @@ public class DataInitializer {
         return flightList;
     }
 
-    public static Tour initializeTours() {
+    public static Tour initializeTours(String path) throws IOException{
         Tour tour = new Tour();
-        tour.setCityList(initializeCityList());
-        tour.setAvailableFlights(initializeFlights(tour));
+        tour.setCityList(initializeCityList(path));
+        tour.setAvailableFlights(initializeFlights(tour, path));
         tour.setGraphOfFlights(initializeGraph(tour));
         return tour;
     }
@@ -59,24 +61,27 @@ public class DataInitializer {
         return listImplementedGraph;
     }
 
-    public static List<City> initializeCityList() {
+    public static List<City> initializeCityList(String path) throws IOException {
         Set<String> cityNameSet = new HashSet<>();
         Integer cityIdSequence = 0;
+        List<String> listOfPaths = DataParser.readFile(path);
         List<City> cityList = new ArrayList<>();
         StringTokenizer stz;
-        for (int i = 0; i < Constants.Paths.PATHS_ARRAY.length; i++) {
-            stz = new StringTokenizer(Constants.Paths.PATHS_ARRAY[i], ",");
+        for (int i = 0; i < listOfPaths.size(); i++) {
+            stz = new StringTokenizer(listOfPaths.get(i), ",");
             City fromDestination = new City();
             City toDestination = new City();
-            fromDestination.setCityName(stz.nextToken());
-            toDestination.setCityName(stz.nextToken());
-            if (!cityNameSet.contains(fromDestination.getCityName())) {
+            fromDestination.setName(stz.nextToken());
+            toDestination.setName(stz.nextToken());
+            if (!cityNameSet.contains(fromDestination.getName())) {
                 fromDestination.setId(++cityIdSequence);
                 cityList.add(fromDestination);
+                cityNameSet.add(fromDestination.getName());
             }
-            if (!cityNameSet.contains(toDestination.getCityName())) {
+            if (!cityNameSet.contains(toDestination.getName())) {
                 toDestination.setId(++cityIdSequence);
                 cityList.add(toDestination);
+                cityNameSet.add(toDestination.getName());
             }
         }
         return cityList;

@@ -19,7 +19,7 @@ public class TravelApplication {
             String fromDestination = stz.nextToken();
             String toDestination = stz.nextToken();
             PathFinder pathFinder = new PathFinder();
-            Tour tour = DataInitializer.initializeTours();
+            Tour tour = DataInitializer.initializeTours("/Users/praveer.satyam/Projects/TravelApp/src/main/resources/paths");
             System.out.println(pathFinder.findFlightPathsBetweenCities(fromDestination, toDestination, tour));
         }
 

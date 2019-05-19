@@ -2,7 +2,7 @@ package com.travel.entity;
 
 public class City {
     private Integer id;
-    private String cityName;
+    private String name;
 
     public Integer getId() {
         return id;
@@ -12,11 +12,11 @@ public class City {
         this.id = id;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getName() {
+        return name;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
